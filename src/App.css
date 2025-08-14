@@ -40,3 +40,14 @@
 .read-the-docs {
   color: #888;
 }
+
+.new-page {
+  padding: 20px;
+  background-color: lightblue;
+}
+
+@media (max-width: 600px) {
+  .new-page {
+    background-color: lightgreen;
+  }
+}
