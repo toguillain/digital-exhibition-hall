@@ -33,6 +33,16 @@ const App: React.FC = () => {
         console.log('API Response:', response);
       } catch (error) {
         console.error('Error fetching scene data:', error);
+        // Fallback to mock data if API fails
+        console.log('API failed, loading mock data.');
+        const mockData = Array.from({ length: pageSize }, (_, i) => ({
+          image: `https://placehold.co/400x250/EFEFEF/333?text=案例+${(currentPage - 1) * pageSize + i + 1}`,
+          title: `客户案例 ${(currentPage - 1) * pageSize + i + 1}`,
+        }));
+        const mockTotal = 50;
+        setCaseStudies(mockData);
+        setTotalItems(mockTotal);
+        setTotalPages(Math.ceil(mockTotal / pageSize));
       }
     };
 
