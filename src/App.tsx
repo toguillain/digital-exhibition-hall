@@ -157,7 +157,7 @@ const App: React.FC = () => {
 
             <div className="pagination">
               <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage <= 1}>{'<'}</button>
-              <span>{`${currentPage}`}</span>
+              <span className="current-page">{currentPage}</span>
               <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage >= totalPages}>{'>'}</button>
               
             </div>
