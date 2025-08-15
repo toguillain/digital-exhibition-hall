@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './App.css';
 import { getProjectListForVisitor } from './api/project';
 
 interface CaseStudy {
+  id: string;
   image: string;
   title: string;
 }
 
 const App: React.FC = () => {
+  const navigate = useNavigate();
   const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -21,6 +24,7 @@ const App: React.FC = () => {
         const response = await getProjectListForVisitor(currentPage, pageSize);
         if (response.data) {
           const formattedData = response.data.map((item: any) => ({
+            id: item.id,
             image: item.userMap?.shareLinkCoverThumb || `https://placehold.co/400x250/EFEFEF/333?text=${item.name}`,
             title: item.name,
           }));
@@ -36,6 +40,7 @@ const App: React.FC = () => {
         // Fallback to mock data if API fails
         console.log('API failed, loading mock data.');
         const mockData = Array.from({ length: pageSize }, (_, i) => ({
+          id: `mock-${(currentPage - 1) * pageSize + i + 1}`,
           image: `https://placehold.co/400x250/EFEFEF/333?text=案例+${(currentPage - 1) * pageSize + i + 1}`,
           title: `客户案例 ${(currentPage - 1) * pageSize + i + 1}`,
         }));
@@ -55,50 +60,11 @@ const App: React.FC = () => {
     }
   };
 
-  const paginationItems = (() => {
-    if (totalPages === 0) {
-      return [];
-    }
-
-    const pageNeighbours = 1;
-    const pages: (string | number)[] = [];
-
-    // Page 1
-    pages.push(1);
-
-    // Left ellipsis
-    if (currentPage - pageNeighbours > 2) {
-      pages.push('...');
-    }
-
-    // Pages around current
-    const startPage = Math.max(2, currentPage - pageNeighbours);
-    const endPage = Math.min(totalPages - 1, currentPage + pageNeighbours);
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(i);
-    }
-
-    // Right ellipsis
-    if (currentPage + pageNeighbours < totalPages - 1) {
-      pages.push('...');
-    }
-
-    // Last page
-    if (totalPages > 1) {
-      pages.push(totalPages);
-    }
-
-    return [...new Set(pages)];
-  })();
-
-  const startItem = totalItems > 0 ? (currentPage - 1) * pageSize + 1 : 0;
-  const endItem = Math.min(currentPage * pageSize, totalItems);
-
   return (
     <div className="page-container">
       <header className="header">
         <div className="header-content">
-          <div className="logo">积木易搭</div>
+          <div className="logo">数字展厅</div>
           <nav className="nav-links">
             <a href="#">首页</a>
             <a href="#">硬件产品</a>
@@ -157,8 +123,8 @@ const App: React.FC = () => {
             </div>
 
             <div className="cases-grid">
-              {caseStudies.map((study, index) => (
-                <div key={index} className="case-card">
+              {caseStudies.map((study) => (
+                <div key={study.id} className="case-card" onClick={() => navigate(`/case/${study.id}`)}>
                   <img src={study.image} alt={study.title} />
                   <p>{study.title}</p>
                 </div>
@@ -169,7 +135,7 @@ const App: React.FC = () => {
               <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage <= 1}>{'<'}</button>
               <span className="current-page">{currentPage}</span>
               <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage >= totalPages}>{'>'}</button>
-              
+            
             </div>
           </div>
         </section>
@@ -178,12 +144,12 @@ const App: React.FC = () => {
       <footer className="footer">
         <div className="footer-content">
             <div className="footer-left">
-                <div className="footer-logo">积木易搭</div>
+                <div className="footer-logo">数字展厅</div>
                 <div className="footer-contact">
                     <p>服务热线</p>
                     <p className="footer-phone">400-080-9959</p>
                     <p>商务合作</p>
-                    <p>Marketing@jimuyida.com</p>
+                    <p>Marketing@shuzizhanting.com</p>
                 </div>
                 <div className="social-icons">
                   <span className="social-icon">wx</span>
@@ -205,8 +171,8 @@ const App: React.FC = () => {
                     <h4>软件产品</h4>
                     <a href="#">视创云展</a>
                     <a href="#">51建模网</a>
-                    <a href="#">Ruler3D</a>
-                    <a href="#">积木墙</a>
+                    <a href="#">数字孪生</a>
+                    <a href="#">3D引擎</a>
                 </div>
                 <div>
                     <h4>解决方案</h4>
@@ -232,7 +198,7 @@ const App: React.FC = () => {
             </div>
         </div>
         <div className="friendship-links">
-          友情链接： <a href="#">睿数信息</a> <a href="#">51建模网</a> <a href="#">视创云展</a>
+          友情链接： <a href="#">51建模网</a> <a href="#">视创云展</a>
         </div>
         <div className="footer-bottom">
             <div className="certs">
@@ -243,10 +209,9 @@ const App: React.FC = () => {
               <span>知识产权管理体系认证</span>
               <span>中国博物馆协会会员</span>
               <span>国军标GJB9001-2017</span>
-              <span>深圳知名品牌</span>
               <span>增值电信业务经营许可证：合字B2-20220111</span>
             </div>
-            <p>Copyright © 2023 深圳积木易搭科技技术有限公司 版权所有 粤ICP备2021054921号 粤公网安备 44030502003271号</p>
+            <p>Copyright © 2023 深圳数字展厅科技技术有限公司 版权所有 粤ICP备2021054921号 粤公网安备 44030502003271号</p>
         </div>
       </footer>
     </div>

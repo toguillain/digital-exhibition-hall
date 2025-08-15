@@ -1,4 +1,4 @@
-const BASE_URL = 'http://192.168.6.216:8085';
+const BASE_URL = 'http://192.168.215.22:8085';
 
 export const getLastSceneForVisitor = async (tenantid: string) => {
   const response = await fetch(`${BASE_URL}/project/getLastSceneForVisitor?tenantid=${tenantid}`);
