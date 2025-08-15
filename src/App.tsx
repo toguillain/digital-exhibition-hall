@@ -157,26 +157,9 @@ const App: React.FC = () => {
 
             <div className="pagination">
               <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage <= 1}>{'<'}</button>
-              {paginationItems.map((item, index) => {
-                if (typeof item === 'string') {
-                  return <span key={`ellipsis-${index}`}>...</span>;
-                }
-                return (
-                  <button
-                    key={item}
-                    className={currentPage === item ? 'active' : ''}
-                    onClick={() => handlePageChange(item)}
-                  >
-                    {item}
-                  </button>
-                );
-              })}
+              <span>{`${currentPage}`}</span>
               <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage >= totalPages}>{'>'}</button>
-              {totalItems > 0 && (
-                <span style={{ marginLeft: '16px', color: '#666' }}>
-                  {`显示第 ${startItem}-${endItem} 项，共 ${totalItems} 项`}
-                </span>
-              )}
+              
             </div>
           </div>
         </section>
