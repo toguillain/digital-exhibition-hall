@@ -11,6 +11,7 @@ const App: React.FC = () => {
   const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [totalItems, setTotalItems] = useState(0);
   const pageSize = 12;
 
   useEffect(() => {
@@ -25,6 +26,7 @@ const App: React.FC = () => {
           }));
           setCaseStudies(formattedData);
           if (response.total) {
+            setTotalItems(response.total);
             setTotalPages(Math.ceil(response.total / pageSize));
           }
         }
@@ -78,6 +80,9 @@ const App: React.FC = () => {
 
     return [...new Set(pages)];
   })();
+
+  const startItem = totalItems > 0 ? (currentPage - 1) * pageSize + 1 : 0;
+  const endItem = Math.min(currentPage * pageSize, totalItems);
 
   return (
     <div className="page-container">
@@ -167,6 +172,11 @@ const App: React.FC = () => {
                 );
               })}
               <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage >= totalPages}>{'>'}</button>
+              {totalItems > 0 && (
+                <span style={{ marginLeft: '16px', color: '#666' }}>
+                  {`显示第 ${startItem}-${endItem} 项，共 ${totalItems} 项`}
+                </span>
+              )}
             </div>
           </div>
         </section>
