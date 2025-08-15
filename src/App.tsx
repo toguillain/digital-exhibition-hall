@@ -14,7 +14,6 @@ const App: React.FC = () => {
   const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [totalItems, setTotalItems] = useState(0);
   const pageSize = 12;
 
   useEffect(() => {
@@ -30,7 +29,6 @@ const App: React.FC = () => {
           }));
           setCaseStudies(formattedData);
           if (response.total) {
-            setTotalItems(response.total);
             setTotalPages(Math.ceil(response.total / pageSize));
           }
         }
@@ -46,7 +44,6 @@ const App: React.FC = () => {
         }));
         const mockTotal = 50;
         setCaseStudies(mockData);
-        setTotalItems(mockTotal);
         setTotalPages(Math.ceil(mockTotal / pageSize));
       }
     };
